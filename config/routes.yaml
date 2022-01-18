@@ -1,3 +1,26 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+
+app_lucky_number:
+  path: /hello/{name?Guest}
+  controller: App\Controller\HelloController::hello
+  methods: GET|HEAD
+
+clients_list:
+  path: /clients
+  controller: App\Controller\ClientsController::index
+  methods: GET|HEAD
+
+
+clients_form_add:
+  path: /clients/add
+  controller: App\Controller\ClientsController::createAndUpdate
+
+clients_form_edit:
+  path: /clients/edit/{id<\d+>}
+  controller: App\Controller\ClientsController::createAndUpdate
+
+clients_form_delete:
+  path: /clients/delete/{id<\d+>}
+  controller: App\Controller\ClientsController::delete

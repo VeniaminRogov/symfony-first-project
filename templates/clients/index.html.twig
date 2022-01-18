@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ClientsController!{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">
+    <h1>{{ title }}!</h1>
+    <a href="{{ path('clients_form_add')}}">Add Client</a>
+    <ul>
+        {% for client in clients_arr %}
+        <li>
+            {{ client.id }} {{ client.firstName }} {{ client.lastName }} {{ client.email }}
+
+            {% if(client.gender == constant('App\\Entity\\Client::GENDER_MALE')) %}
+                Male
+            {% elseif (client.gender == constant('App\\Entity\\Client::GENDER_FEMALE')) %}
+                Female
+            {% elseif (client.gender == constant('App\\Entity\\Client::GENDER_HZ')) %}
+                HZ
+            {% endif %}
+            {{ client.isActive ? 'true' : 'false' }}
+            {{ client.address.str1 }}
+            {{ client.address.str2 }}
+            {{ client.address.zip }}
+            <a href="{{ path('clients_form_edit', {id: client.id}) }}">Edit</a>
+            <a href="{{ path('clients_form_delete', {id: client.id}) }}">Delete</a>
+
+        </li>
+        {% endfor %}
+    </ul>
+    {% for message in app.flashes('notice') %}
+        <div class="flash-notice">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

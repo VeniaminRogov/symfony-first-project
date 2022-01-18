@@ -1,0 +1,22 @@
+App\Entity\Client:
+  constraints:
+    - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: email
+  properties:
+    firstName:
+      - Length:
+          min: 2
+          max: 255
+      - Regex: '/[a-zA-Z]+/'
+    lastName:
+      - Regex: '/[a-zA-Z]+/'
+      - Length:
+          min: 2
+          max: 255
+    email:
+      - Email: ~
+      - Length:
+          min: 2
+          max: 255
+    address:
+      - Valid: ~
+

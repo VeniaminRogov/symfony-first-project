@@ -1,0 +1,11 @@
+<body>
+{{ form(form) }}
+
+<a href="{{ path('clients_list') }}">Back to List</a>
+
+{% for message in app.flashes('notice') %}
+    <div class="flash-notice">
+        {{ message }}
+    </div>
+{% endfor %}
+</body>
