@@ -38,9 +38,29 @@ class ClientRepository extends ServiceEntityRepository
         if($data['name']){
             $req
             ->andWhere("c.firstName like :name")
-            ->andWhere("c.lastName like :name")
+//            ->andWhere("c.lastName like :name")
             ->setParameter('name', "%".$data['name']."%");
         }
+
+        if($data['email']){
+            $req
+                ->andWhere("c.email = :email")
+                ->setParameter('email', $data['email']);
+        }
+
+
+        if($data['gender']){
+            $req
+                ->andWhere('c.gender = :gender')
+                ->setParameter('gender', $data['gender']);
+        }
+
+        if($data['city']){
+            $req
+                ->andWhere('ca.city = :cityName')
+                ->setParameter('cityName', $data['city']);
+        }
+
 
         return $req->getQuery()->getResult();
     }

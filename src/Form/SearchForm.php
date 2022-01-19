@@ -17,19 +17,21 @@ class SearchForm extends AbstractType {
             ->add('name', TextType::class, [
                 'required' => false
             ])
-//            ->add('email', TextType::class)
-//            ->add('gender', ChoiceType::class, [
-//                'choices' => [
-//                    'male' => Client::GENDER_MALE,
-//                    'female' => Client::GENDER_FEMALE,
-//                    'hz' => Client::GENDER_HZ
-//                ],
-////                'multiple' => true
-//            ])
-//            ->add('city', EntityType::class, [
-//                'class' => City::class,
-//                'choice_label' => 'name'
-//            ])
+            ->add('email', TextType::class, [
+                'required' => false
+            ])
+            ->add('gender', ChoiceType::class, [
+                'choices' => [
+                    'male' => Client::GENDER_MALE,
+                    'female' => Client::GENDER_FEMALE,
+                    'hz' => Client::GENDER_HZ
+                ],
+//                'multiple' => true
+            ])
+            ->add('city', EntityType::class, [
+                'class' => City::class,
+                'choice_label' => 'name'
+            ])
             ->add('sort',SubmitType::class);
     }
 }
