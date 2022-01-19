@@ -2,13 +2,14 @@
 #    path: /
 #    controller: App\Controller\DefaultController::index
 
-app_lucky_number:
-  path: /hello/{name?Guest}
-  controller: App\Controller\HelloController::hello
-  methods: GET|HEAD
+#app_lucky_number:
+#  path: /hello/{name?Guest}
+#  controller: App\Controller\HelloController::hello
+#  methods: GET|HEAD
+
 
 clients_list:
-  path: /clients
+  path: /
   controller: App\Controller\ClientsController::index
   methods: GET|HEAD
 

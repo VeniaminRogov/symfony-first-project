@@ -21,7 +21,6 @@ class ClientsController extends AbstractController
             );
         }
         return $this->render('clients/index.html.twig', [
-            'title' => 'Clients list',
             'clients_arr' => $clients
         ]);
     }
@@ -38,7 +37,6 @@ class ClientsController extends AbstractController
 
         $form = $this->createForm(ClientForm::class, $client);
 
-//        dump($request);die;
 
         $form->handleRequest($request);
 
@@ -49,14 +47,16 @@ class ClientsController extends AbstractController
             $entityManager->persist($client);
             $entityManager->flush();
             $this->addFlash(
-                'notice',
-                'Your changes were saved!'
+                'primary',
+                $id ? 'Your changes were saved!' :
+                'Your client is added!'
             );
             return $this->redirectToRoute('clients_form_edit', ['id' => $client->getId()]);
         }
 
         return $this->renderForm('clients/form.html.twig',[
-            'form' => $form
+            'form' => $form,
+            'title' => !$id ? 'Create' : 'Edit'
         ]);
     }
 
@@ -67,7 +67,7 @@ class ClientsController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash(
-            'notice',
+            'danger',
             'Delete client ---'.$id
         );
 

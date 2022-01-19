@@ -1,11 +1,25 @@
-<body>
-{{ form(form) }}
+{% extends 'base.html.twig' %}
 
-<a href="{{ path('clients_list') }}">Back to List</a>
 
-{% for message in app.flashes('notice') %}
-    <div class="flash-notice">
-        {{ message }}
+{% block title %}Create client{% endblock %}
+{% block pageTitle %}{{ title }}{% endblock %}
+
+
+{% block content %}
+
+<div class="col">
+    <div class="form">
+        {{ form(form) }}
+
+        <a href="{{ path('clients_list') }}">Back to List</a>
+
+        {% for message in app.flashes('notice') %}
+            <div class="flash-notice">
+                {{ message }}
+            </div>
+        {% endfor %}
     </div>
-{% endfor %}
-</body>
+</div>
+
+{% endblock %}
+
