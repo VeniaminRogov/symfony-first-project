@@ -23,10 +23,10 @@
                         HZ
                     {% endif %}
                     {{ client.isActive ? 'true' : 'false' }}
-                    {{ client.address.str1 }}
-                    {{ client.address.str2 }}
-                    {{ client.address.zip }}
-                    {{ client.address.city.name|capitalize }}
+{#                    {{ client.address.str1 }}#}
+{#                    {{ client.address.str2 }}#}
+{#                    {{ client.address.zip }}#}
+{#                    {{ client.address.city.name|capitalize }}#}
                     <a class="btn btn-primary" href="{{ path('clients_form_edit', {id: client.id}) }}">Edit</a>
                     <a class="btn btn-danger" href="{{ path('clients_form_delete', {id: client.id}) }}">Delete</a>
                 </li>

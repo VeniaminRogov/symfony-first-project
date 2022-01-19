@@ -20,8 +20,31 @@ class ClientRepository extends ServiceEntityRepository
     }
 
     public function countClients(){
-        return $this->createQueryBuilder('c')->select('count(c.id)')->getQuery()->getSingleScalarResult();
+        return $this->createQueryBuilder('c')
+                        ->select('count(c.id)')
+                        ->getQuery()
+                        ->getSingleScalarResult();
     }
+
+    public function sort(?array $data){
+        if(!$data) {
+            return $this->findAll();
+        }
+        $req = $this->createQueryBuilder('c');
+        $req
+            ->leftJoin('c.address', 'ca')
+            ->leftJoin('ca.city', 'ci');
+
+        if($data['name']){
+            $req
+            ->andWhere("c.firstName like :name")
+            ->andWhere("c.lastName like :name")
+            ->setParameter('name', "%".$data['name']."%");
+        }
+
+        return $req->getQuery()->getResult();
+    }
+
 
 
     // /**

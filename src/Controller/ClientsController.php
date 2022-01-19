@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Form\SearchForm;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,18 +13,27 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ClientsController extends AbstractController
 {
-    public function index(ManagerRegistry $doctrine): Response
+    public function index(Request $request,ManagerRegistry $doctrine): Response
     {
-        $clients = $doctrine->getRepository(Client::class)->findAll();
+//        $clients = $doctrine->getRepository(Client::class)->findAll();
+
+        $form = $this->createForm(SearchForm::class);
+        $form->handleRequest($request);
+
+        $clients = $doctrine->getRepository(Client::class)->sort($form->getData());
+
+        dump($clients);
+
         if(!$clients){
             throw $this->createNotFoundException(
                 'No found clients'
             );
         }
         return $this->render('clients/index.html.twig', [
-            'clients_arr' => $clients
+            'clients_arr' => $clients,
         ]);
     }
+
 
     public function createAndUpdate(Request $request, ManagerRegistry $doctrine, ?int $id = null): Response{
         $client = null;

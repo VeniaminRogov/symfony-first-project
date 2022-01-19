@@ -11,7 +11,10 @@
 clients_list:
   path: /
   controller: App\Controller\ClientsController::index
-  methods: GET|HEAD
+
+#clients_sort:
+#  path: /
+#  controller: App\Controller\ClientsController::sort
 
 
 clients_form_add:
