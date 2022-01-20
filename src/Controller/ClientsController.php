@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Client;
 use App\Form\SearchForm;
+use App\Object\ObjectSearchForm;
+use App\Services\ClientModel;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,52 +17,42 @@ class ClientsController extends AbstractController
 {
     public function index(Request $request,ManagerRegistry $doctrine): Response
     {
-//        $clients = $doctrine->getRepository(Client::class)->findAll();
+        $searchObject = new ObjectSearchForm();
+        $form = $this->createForm(SearchForm::class, $searchObject);
 
-        $form = $this->createForm(SearchForm::class);
         $form->handleRequest($request);
 
-        $clients = $doctrine->getRepository(Client::class)->sort($form->getData());
+        $clients = $doctrine->getRepository(Client::class)->sort($searchObject);
 
-        dump($clients);
-
-        if(!$clients){
-            throw $this->createNotFoundException(
-                'No found clients'
-            );
-        }
         return $this->render('clients/index.html.twig', [
             'clients_arr' => $clients,
+            'searchForm' => $form->createView()
         ]);
     }
 
 
-    public function createAndUpdate(Request $request, ManagerRegistry $doctrine, ?int $id = null): Response{
+    public function createAndUpdate(Request $request, ManagerRegistry $doctrine, ?int $id = null, ClientModel $model): Response{
         $client = null;
+        $id ? $bool = true : $bool = false;
 
-        if ($id) {
-            $client = $doctrine->getRepository(Client::class)->find($id);
-            if(!$client){
-                throw new NotFoundHttpException('Not found');
-            }
+        if($model->checkClient($id)){
+            throw new NotFoundHttpException();
         }
 
         $form = $this->createForm(ClientForm::class, $client);
-
 
         $form->handleRequest($request);
 
 
         if($form->isSubmitted() && $form->isValid()){
             $client = $form->getData();
+
             $entityManager = $doctrine->getManager();
+            $model->isHasDate($client);
+
             $entityManager->persist($client);
             $entityManager->flush();
-            $this->addFlash(
-                'primary',
-                $id ? 'Your changes were saved!' :
-                'Your client is added!'
-            );
+
             return $this->redirectToRoute('clients_form_edit', ['id' => $client->getId()]);
         }
 

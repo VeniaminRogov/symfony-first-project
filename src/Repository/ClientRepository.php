@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Client;
+use App\Object\ObjectSearchForm;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -26,7 +27,7 @@ class ClientRepository extends ServiceEntityRepository
                         ->getSingleScalarResult();
     }
 
-    public function sort(?array $data){
+    public function sort(ObjectSearchForm $data){
         if(!$data) {
             return $this->findAll();
         }
@@ -35,32 +36,37 @@ class ClientRepository extends ServiceEntityRepository
             ->leftJoin('c.address', 'ca')
             ->leftJoin('ca.city', 'ci');
 
-        if($data['name']){
+        if($data->getName()){
             $req
             ->andWhere('
                         (c.firstName LIKE :name) OR
                         (c.lastName LIKE :name)
                     ')
-            ->setParameter('name', "%".$data['name']."%");
+            ->setParameter('name', "%".$data->getName()."%");
         }
 
-        if($data['email']){
+        if($data->getEmail()){
             $req
                 ->andWhere("c.email = :email")
-                ->setParameter('email', $data['email']);
+                ->setParameter('email', $data->getEmail());
         }
 
 
-        if($data['gender']){
+        if($data->getGender()){
             $req
                 ->andWhere('c.gender = :gender')
-                ->setParameter('gender', $data['gender']);
+                ->setParameter('gender', $data->getGender());
         }
 
-        if($data['city']){
+        if($data->getCity()){
             $req
                 ->andWhere('ci.id = :cityName')
-                ->setParameter('cityName', $data['city']);
+                ->setParameter('cityName', $data->getCity());
+        }
+
+        if($data->getSortField() && $data->getOrderBy()){
+            $req
+                ->orderBy($data->getSortField(), $data->getOrderBy());
         }
 
 

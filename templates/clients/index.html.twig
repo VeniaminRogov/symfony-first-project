@@ -6,31 +6,38 @@
 {% block content %}
     <div class="container">
         <div class="mb-5 searchForm">
-            {{ render(controller('App\\Controller\\FormController::formRender')) }}
+{#            {{ render(controller('App\\Controller\\FormController::formRender')) }}#}
+            {{ form(searchForm) }}
         </div>
 
         <a class="btn btn-primary" href="{{ path('clients_form_add') }}">Add Client</a>
+        {% if clients_arr %}
         <ul class="col list-group mt-5">
-            {% for client in clients_arr %}
-                <li class="list-group-item">
-                    {{ client.id }} {{ client.firstName|capitalize }} {{ client.lastName|capitalize }} {{ client.email }}
+                {% for client in clients_arr %}
+                    <li class="list-group-item">
+                        {{ client.id }} {{ client.firstName|capitalize }} {{ client.lastName|capitalize }} {{ client.email }}
 
-                    {% if(client.gender == constant('App\\Entity\\Client::GENDER_MALE')) %}
-                        Male
-                    {% elseif (client.gender == constant('App\\Entity\\Client::GENDER_FEMALE')) %}
-                        Female
-                    {% elseif (client.gender == constant('App\\Entity\\Client::GENDER_HZ')) %}
-                        HZ
-                    {% endif %}
-                    {{ client.isActive ? 'true' : 'false' }}
-{#                    {{ client.address.str1 }}#}
-{#                    {{ client.address.str2 }}#}
-{#                    {{ client.address.zip }}#}
-{#                    {{ client.address.city.name|capitalize }}#}
-                    <a class="btn btn-primary" href="{{ path('clients_form_edit', {id: client.id}) }}">Edit</a>
-                    <a class="btn btn-danger" href="{{ path('clients_form_delete', {id: client.id}) }}">Delete</a>
-                </li>
-            {% endfor %}
+                        {% if(client.gender == constant('App\\Entity\\Client::GENDER_MALE')) %}
+                            Male
+                        {% elseif (client.gender == constant('App\\Entity\\Client::GENDER_FEMALE')) %}
+                            Female
+                        {% elseif (client.gender == constant('App\\Entity\\Client::GENDER_HZ')) %}
+                            HZ
+                        {% endif %}
+                        {{ client.isActive ? 'true' : 'false' }}
+    {#                    {{ client.address.str1 }}#}
+    {#                    {{ client.address.str2 }}#}
+    {#                    {{ client.address.zip }}#}
+    {#                    {{ client.address.city.name|capitalize }}#}
+                        {{ client.createdAt|date("Y-m-d H:i") }}
+                        {{ client.updatedAt|date("Y-m-d H:i") }}
+                        <a class="btn btn-primary" href="{{ path('clients_form_edit', {id: client.id}) }}">Edit</a>
+                        <a class="btn btn-danger" href="{{ path('clients_form_delete', {id: client.id}) }}">Delete</a>
+                    </li>
+                {% endfor %}
         </ul>
+       {% else %}
+            Clients not found
+        {% endif %}
     </div>
 {% endblock %}
