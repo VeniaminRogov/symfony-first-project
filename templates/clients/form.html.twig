@@ -9,16 +9,35 @@
 
 <div class="col">
     <div class="form">
-        {{ form(form) }}
+        {{ form_start(form) }}
+            {{ form_row(form.firstName) }}
+            {{ form_row(form.lastName) }}
 
-        <a href="{{ path('clients_list') }}">Back to List</a>
+            {{ form_row(form.email) }}
+            {{ form_row(form.gender) }}
+            {{ form_row(form.isActive) }}
+            {{ form_row(form.address) }}
 
-        {% for message in app.flashes('notice') %}
-            <div class="flash-notice">
-                {{ message }}
-            </div>
-        {% endfor %}
+            {% for message in app.flashes('notice') %}
+                <div class="flash-notice">
+                    {{ message }}
+                </div>
+            {% endfor %}
+                <ul class="phones"
+                    data-index="{{ form.phones|length > 0 ? form.phones|last.vars.name + 1 : 0 }}"
+                    data-prototype="{{ form_widget(form.phones.vars.prototype)|e('html_attr') }}"
+                >
+                    {% for phone in form.phones %}
+                        <li>
+                            {{ form_row(phone.number) }}
+                        </li>
+                    {% endfor %}
+                </ul>
+                <button type="button" class="add_item_link" data-collection-holder-class="phones">Add a phone</button>
+
     </div>
+    {{ form_end(form) }}
+    <a href="{{ path('clients_list') }}">Back to List</a>
 </div>
 
 {% endblock %}

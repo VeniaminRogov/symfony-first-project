@@ -23,7 +23,7 @@ class ClientsController extends AbstractController
         $form->handleRequest($request);
 
         $clients = $doctrine->getRepository(Client::class)->sort($searchObject);
-
+//        dump($clients);die;
         return $this->render('clients/index.html.twig', [
             'clients_arr' => $clients,
             'searchForm' => $form->createView()
@@ -32,26 +32,16 @@ class ClientsController extends AbstractController
 
 
     public function createAndUpdate(Request $request, ManagerRegistry $doctrine, ?int $id = null, ClientModel $model): Response{
-        $client = null;
         $id ? $bool = true : $bool = false;
 
-        if($model->checkClient($id)){
-            throw new NotFoundHttpException();
-        }
-
-        $form = $this->createForm(ClientForm::class, $client);
+        $form = $this->createForm(ClientForm::class, $model->checkClient($id));
 
         $form->handleRequest($request);
-
 
         if($form->isSubmitted() && $form->isValid()){
             $client = $form->getData();
 
-            $entityManager = $doctrine->getManager();
-            $model->isHasDate($client);
-
-            $entityManager->persist($client);
-            $entityManager->flush();
+            $model->createAndUpdateClient($client, $bool);
 
             return $this->redirectToRoute('clients_form_edit', ['id' => $client->getId()]);
         }
@@ -62,11 +52,10 @@ class ClientsController extends AbstractController
         ]);
     }
 
-    public function delete(int $id, ManagerRegistry $doctrine) : Response{
-        $client = $doctrine->getRepository(Client::class)->find($id);
-        $entityManager = $doctrine->getManager();
-        $entityManager->remove($client);
-        $entityManager->flush();
+    public function delete(int $id, ClientModel $model) : Response{
+        if(!$model->deleteClient($id)){
+            throw new NotFoundHttpException;
+        }
 
         $this->addFlash(
             'danger',
@@ -75,5 +64,4 @@ class ClientsController extends AbstractController
 
         return $this->redirectToRoute('clients_list');
     }
-
 }

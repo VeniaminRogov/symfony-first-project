@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ClientRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 class Client
@@ -40,7 +42,22 @@ class Client
 
     #[ORM\Column(type: 'datetime')]
     private $updatedAt;
-    
+
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Phone::class, cascade: ['persist'], orphanRemoval: true,)]
+    private $phones;
+
+    public function __construct()
+    {
+        $this->phones = new ArrayCollection();
+    }
+
+    public function createPhone(Phone $ph){
+        $this->phones->add($ph);
+    }
+
+    public function deletePhone(Phone $ph){
+        $this->phones->remove($ph);
+    }
 
     public function getId(): ?int
     {
@@ -139,6 +156,36 @@ class Client
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Phone[]
+     */
+    public function getPhones(): Collection
+    {
+        return $this->phones;
+    }
+
+    public function addPhone(Phone $phone): self
+    {
+        if (!$this->phones->contains($phone)) {
+            $this->phones[] = $phone;
+            $phone->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removePhone(Phone $phone): self
+    {
+        if ($this->phones->removeElement($phone)) {
+            // set the owning side to null (unless already changed)
+            if ($phone->getClient() === $this) {
+                $phone->setClient(null);
+            }
+        }
 
         return $this;
     }

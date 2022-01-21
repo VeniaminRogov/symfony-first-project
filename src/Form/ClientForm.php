@@ -3,8 +3,10 @@ namespace App\Form;
 
 use App\Entity\Address;
 use App\Entity\Client;
+use phpDocumentor\Reflection\Types\Collection;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
@@ -27,6 +29,13 @@ class ClientForm extends AbstractType {
                 'required' => false
             ])
             ->add('address', AddressForm::class)
+            ->add('phones', CollectionType::class, [
+                'entry_type' => PhoneForm::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
+                "allow_delete" => true,
+                'by_reference' => false
+            ])
             ->add('save',SubmitType::class);
     }
 
@@ -35,7 +44,7 @@ class ClientForm extends AbstractType {
     {
         $resolver->setDefaults([
             'data_class' => Client::class,
-            'cascade_validation' => true
+            'cascade_validation' => true,
         ]);
     }
 }

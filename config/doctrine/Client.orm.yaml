@@ -1,0 +1,13 @@
+App\Entity\Client:
+  type: entity
+  oneToMany:
+    tags:
+      targetEntity: App\Entity\Phone
+      cascade: [persist]
+
+#App\Entity\Phone:
+#  type: entity
+#  manyToOne:
+#    tags:
+#      targetEntity: App\Entity\Client
+#      cascade: ["persist"]

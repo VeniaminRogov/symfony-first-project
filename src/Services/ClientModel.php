@@ -5,34 +5,51 @@ namespace App\Services;
 use App\Entity\Client;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\RouterInterface;
 
 class ClientModel{
 
     private $flash;
     private $doctrine;
+    private $router;
 
-    public function __construct(RequestStack $requestStack, ManagerRegistry $doctrine)
+    public function __construct(RequestStack $requestStack, ManagerRegistry $doctrine, RouterInterface $router)
     {
         $this->flash = $requestStack->getSession()->getFlashBag();
         $this->doctrine = $doctrine->getManager();
+        $this->router = $router;
     }
     
-    public function checkClient(?int $id): bool
+    public function checkClient(?int $id = null)
     {
-            $client = $this->doctrine->getRepository(Client::class)->find($id);
-            if(!$client){
-                return false;
-            }
-            return true;
+        if(!$id){
+            return $id;
+        }
+        return $this->doctrine->getRepository(Client::class)->find($id);
     }
 
-    public function isHasDate(Client $client){
+    public function createAndUpdateClient(Client $client, $bool): Client
+    {
         if(!$client->getCreatedAt()){
             $this->createClient($client);
             $this->updatedClient($client);
+
+            $this->flashClient($bool);
         }
         $this->updatedClient($client);
+
+        $this->flashClient($bool);
+
+
+
+        $this->doctrine->persist($client);
+
+
+//        dump($client);die;
+
+        $this->doctrine->flush();
+
+        return $client;
     }
 
     public function createClient(Client $client){
@@ -41,6 +58,18 @@ class ClientModel{
 
     public function updatedClient(Client $client){
         $client->setUpdatedAt(new \DateTime());
+    }
+
+    public function deleteClient(int $id): bool
+    {
+        $client = $this->checkClient($id);
+
+        $entityManager = $this->doctrine;
+        $entityManager->remove($client);
+
+        $entityManager->flush();
+
+        return true;
     }
 
     private function flashClient($bool){
