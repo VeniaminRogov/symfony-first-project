@@ -2,6 +2,8 @@
 
 namespace App\Object;
 
+use App\Entity\City;
+use App\Entity\Client;
 use phpDocumentor\Reflection\Types\This;
 
 class ObjectSearchForm {
@@ -9,6 +11,7 @@ class ObjectSearchForm {
     private $email;
     private $gender;
     private $city;
+    private $phone;
 
     private $orderBy;
     private $sortField;
@@ -33,19 +36,35 @@ class ObjectSearchForm {
         return $this->email;
     }
 
-    public function getCity() : ?string{
+    public function getCity(): ?City{
         return $this->city;
     }
 
-    public function setCity(string $city) : ?string{
+    public function setCity(City $city): ?City
+    {
         $this->city = $city;
 
         return $this->city;
     }
 
-
     public function getOrderBy(): ?string{
         return $this->orderBy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param mixed $phone
+     */
+    public function setPhone($phone): void
+    {
+        $this->phone = $phone;
     }
 
     public function setOrderBy(string $orderBy): ?string {

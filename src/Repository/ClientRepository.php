@@ -44,6 +44,13 @@ class ClientRepository extends ServiceEntityRepository
                         (c.lastName LIKE :name)
                     ')
             ->setParameter('name', "%".$data->getName()."%");
+
+        }
+
+        if($data->getPhone()){
+            $req
+                ->andWhere('cp.number LIKE :phone')
+                ->setParameter('phone', "%".$data->getPhone()."%");
         }
 
         if($data->getEmail()){
@@ -61,15 +68,18 @@ class ClientRepository extends ServiceEntityRepository
 
         if($data->getCity()){
             $req
-                ->andWhere('ci.id = :cityName')
+                ->andWhere('ca.city = :cityName')
                 ->setParameter('cityName', $data->getCity());
+
         }
+
 
         if($data->getSortField() && $data->getOrderBy()){
             $req
                 ->orderBy($data->getSortField(), $data->getOrderBy());
         }
 
+//        dump($req);die;
 
         return $req->getQuery()->getResult();
     }

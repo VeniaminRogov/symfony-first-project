@@ -3,6 +3,7 @@ namespace App\Form;
 
 use App\Entity\City;
 use App\Entity\Client;
+use App\Entity\Phone;
 use App\Object\ObjectSearchForm;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -21,6 +22,11 @@ class SearchForm extends AbstractType {
             ])
             ->add('email', TextType::class, [
                 'required' => false
+            ])
+            ->add('phone', TextType::class, [
+                'required' => false,
+//                'class' => Phone::class,
+//                'choice_label' => 'number'
             ])
             ->add('gender', ChoiceType::class, [
                 'choices' => [

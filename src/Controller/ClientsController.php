@@ -22,8 +22,10 @@ class ClientsController extends AbstractController
 
         $form->handleRequest($request);
 
+
         $clients = $doctrine->getRepository(Client::class)->sort($searchObject);
-//        dump($clients);die;
+
+
         return $this->render('clients/index.html.twig', [
             'clients_arr' => $clients,
             'searchForm' => $form->createView()

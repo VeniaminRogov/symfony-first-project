@@ -33,19 +33,11 @@ class ClientModel{
         if(!$client->getCreatedAt()){
             $this->createClient($client);
             $this->updatedClient($client);
-
-            $this->flashClient($bool);
         }
         $this->updatedClient($client);
-
         $this->flashClient($bool);
 
-
-
         $this->doctrine->persist($client);
-
-
-//        dump($client);die;
 
         $this->doctrine->flush();
 
