@@ -41,7 +41,8 @@ class SearchForm extends AbstractType {
                 'choices' => [
                     'First name' => 'c.firstName',
                     'Last name' => 'c.lastName',
-                    'City' => 'ci.name'
+                    'City' => 'ci.name',
+                    'Phone' => 'cp.number'
                 ]
             ])
             ->add('orderBy', ChoiceType::class, [

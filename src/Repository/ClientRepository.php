@@ -33,6 +33,7 @@ class ClientRepository extends ServiceEntityRepository
         }
         $req = $this->createQueryBuilder('c');
         $req
+            ->leftJoin('c.phones', 'cp')
             ->leftJoin('c.address', 'ca')
             ->leftJoin('ca.city', 'ci');
 

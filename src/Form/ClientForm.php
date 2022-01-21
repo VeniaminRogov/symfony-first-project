@@ -29,7 +29,7 @@ class ClientForm extends AbstractType {
                 'required' => false
             ])
             ->add('address', AddressForm::class)
-            ->add('phones', CollectionType::class, [
+                ->add('phones', CollectionType::class, [
                 'entry_type' => PhoneForm::class,
                 'entry_options' => ['label' => false],
                 'allow_add' => true,

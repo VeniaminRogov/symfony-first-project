@@ -19,4 +19,5 @@ App\Entity\Client:
           max: 255
     address:
       - Valid: ~
+    phones:
 

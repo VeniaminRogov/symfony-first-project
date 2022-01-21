@@ -4,7 +4,6 @@
 {% block pageTitle %}All clients{% endblock %}
 
 {% block content %}
-    <div class="container">
         <div class="mb-5 searchForm">
 {#            {{ render(controller('App\\Controller\\FormController::formRender')) }}#}
             {{ form(searchForm) }}
@@ -12,40 +11,63 @@
 
         <a class="btn btn-primary" href="{{ path('clients_form_add') }}">Add Client</a>
         {% if clients_arr %}
-{#        <ul class="col list-group mt-5">#}
-{#                {% for client in clients_arr %}#}
-{#                    <li class="list-group-item">#}
-{#                        {{ client.id }} {{ client.firstName|capitalize }} {{ client.lastName|capitalize }} {{ client.email }}#}
-
-{#                        {% if(client.gender == constant('App\\Entity\\Client::GENDER_MALE')) %}#}
-{#                            Male#}
-{#                        {% elseif (client.gender == constant('App\\Entity\\Client::GENDER_FEMALE')) %}#}
-{#                            Female#}
-{#                        {% elseif (client.gender == constant('App\\Entity\\Client::GENDER_HZ')) %}#}
-{#                            HZ#}
-{#                        {% endif %}#}
-{#                        {{ client.isActive ? 'true' : 'false' }}#}
-{#                        {{ client.address.str1 }}#}
-{#                        {{ client.address.str2 }}#}
-{#                        {{ client.address.zip }}#}
-{#                        {{ client.address.city.name|capitalize }}#}
-{#                        {{ client.createdAt|date("Y-m-d H:i") }}#}
-{#                        {{ client.updatedAt|date("Y-m-d H:i") }}#}
-{#                        <a class="btn btn-primary" href="{{ path('clients_form_edit', {id: client.id}) }}">Edit</a>#}
-{#                        <a class="btn btn-danger" href="{{ path('clients_form_delete', {id: client.id}) }}">Delete</a>#}
-{#                    </li>#}
-{#                {% endfor %}#}
-{#        </ul>#}
-
-            {% for client in clients_arr %}
-            <table class="table">
+            <table class="table mt-5">
                 <thead>
-
+                <th scope="col">#</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Active</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Street 1</th>
+                <th scope="col">Street 2</th>
+                <th scope="col">Zip</th>
+                <th scope="col">City</th>
+                <th scope="col">Created at</th>
+                <th scope="col">Updated at</th>
+                <th scope="col">Action</th>
                 </thead>
-            </table>
-            {% endfor %}
+
+                <tbody>
+                {% for client in clients_arr %}
+
+                <tr>
+                    <th scope="row">{{ client.id }}</th>
+                    <th scope="row">{{ client.firstName }}</th>
+                    <th scope="row">{{ client.lastName }}</th>
+                    <th scope="row">{{ client.email }}</th>
+                    <th scope="row">
+                        {% if(client.gender == constant('App\\Entity\\Client::GENDER_MALE')) %}
+                            Male
+                        {% elseif (client.gender == constant('App\\Entity\\Client::GENDER_FEMALE')) %}
+                            Female
+                        {% elseif (client.gender == constant('App\\Entity\\Client::GENDER_HZ')) %}
+                            HZ
+                        {% endif %}
+                    </th>
+                    <th scope="row">{{ client.isActive ? 'true' : 'false'}}</th>
+                    <th scope="row">
+                        {% for phones in client.phones %}
+                            {{ phones.number }}
+                        {% endfor %}
+                    </th>
+                    <th scope="row">{{ client.address.str1 }}</th>
+                    <th scope="row">{{ client.address.str2 }}</th>
+                    <th scope="row">{{ client.address.zip }}</th>
+                    <th scope="row">{{ client.address.city.name|capitalize  }}</th>
+                    <th scope="row">{{ client.createdAt|date("Y-m-d H:i") }}</th>
+                    <th scope="row">{{ client.updatedAt|date("Y-m-d H:i") }}</th>
+                    <th scope="row">
+                        <a class="btn btn-primary" href="{{ path('clients_form_edit', {id: client.id}) }}">Edit</a>
+                        <a class="btn btn-danger" href="{{ path('clients_form_delete', {id: client.id}) }}">Delete</a>
+                    </th>
+                </tr>
+                </tbody>
+                {% endfor %}
+
+                </table>
        {% else %}
             Clients not found
         {% endif %}
-    </div>
 {% endblock %}

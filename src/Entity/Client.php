@@ -51,14 +51,6 @@ class Client
         $this->phones = new ArrayCollection();
     }
 
-    public function createPhone(Phone $ph){
-        $this->phones->add($ph);
-    }
-
-    public function deletePhone(Phone $ph){
-        $this->phones->remove($ph);
-    }
-
     public function getId(): ?int
     {
         return $this->id;

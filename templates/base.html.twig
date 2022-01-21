@@ -8,11 +8,11 @@
     {% block body %}
 {#        {% include 'components/header.html.twig' %}#}
         {{ render(controller('App\\Controller\\HomeController::countClient')) }}
-        <div class="container">
+        <div class="container-fluid">
             <h1 class="text-center">
                 {% block pageTitle %}{% endblock %}
             </h1>
-            <div class="container content">
+            <div class="container-fluid content">
                 {% block content %}{% endblock %}
                 {% include 'components/notice.html.twig' %}
             </div>
