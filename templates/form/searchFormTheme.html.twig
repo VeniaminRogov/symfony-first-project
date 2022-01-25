@@ -1,0 +1,67 @@
+{% extends 'bootstrap_5_horizontal_layout.html.twig' %}
+
+{% block form_label_class -%}
+{%- endblock form_label_class %}
+
+
+{% block _search_form_phone_row %}
+    <div class="mb-3 row"><label class="col-form-label" for="search_form_phone">Phone</label><div class="col-sm"><input type="text" id="search_form_phone" name="search_form[phone]" class="form-control">        </div></div>
+{% endblock %}
+
+{% block form_group_class -%}
+    col-sm
+{% endblock form_group_class %}
+
+{% block form_row -%}
+{%- if expanded is defined and expanded -%}
+    {{ block('fieldset_form_row') }}
+{%- else -%}
+    {%- set widget_attr = {} -%}
+    {%- if help is not empty -%}
+        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+    {%- endif -%}
+    {%- set row_class = row_class|default(row_attr.class|default('mb-3')) -%}
+    {%- set is_form_floating = is_form_floating|default('form-floating' in row_class) -%}
+    {%- set is_input_group = is_input_group|default('input-group' in row_class) -%}
+    {#- Remove behavior class from the main container -#}
+    {%- set row_class = row_class|replace({'form-floating': '', 'input-group': ''}) -%}
+    <div{% with {attr: row_attr|merge({class: (row_class ~ ' row align-items-center' ~ ((not compound or force_error|default(false)) and not valid ? ' is-invalid'))|trim})} %}{{ block('attributes') }}{% endwith %}>
+        {%- if is_form_floating or is_input_group -%}
+            <div class="{{ block('form_label_class') }}"></div>
+            <div class="{{ block('form_group_class') }}">
+                {%- if is_form_floating -%}
+                    <div class="form-floating">
+                        {{- form_widget(form, widget_attr) -}}
+                        {{- form_label(form) -}}
+                    </div>
+                {%- elseif is_input_group -%}
+                    <div class="input-group">
+                        {{- form_label(form) -}}
+                        {{- form_widget(form, widget_attr) -}}
+                        {#- Hack to properly display help with input group -#}
+                        {{- form_help(form) -}}
+                    </div>
+                {%- endif -%}
+                {%- if not is_input_group -%}
+                    {{- form_help(form) -}}
+                {%- endif -%}
+                {{- form_errors(form) -}}
+            </div>
+        {%- else -%}
+            {{- form_label(form) -}}
+            <div class="{{ block('form_group_class') }}">
+                {{- form_widget(form, widget_attr) -}}
+                {{- form_help(form) -}}
+                {{- form_errors(form) -}}
+            </div>
+        {%- endif -%}
+        {##}</div>
+{%- endif -%}
+{%- endblock %}
+
+{% block _search_form_email_widget %}
+    <div class="input-group col-sm">
+        <span class="input-group-text" id="basic-addon1">@</span>
+        {{- block('form_widget_simple') -}}
+    </div>
+{% endblock %}

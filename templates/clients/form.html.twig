@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-
+{% form_theme form with './form/form.html.twig' %}
 
 {% block title %}Create client{% endblock %}
 {% block pageTitle %}{{ title }}{% endblock %}
@@ -7,38 +7,42 @@
 
 {% block content %}
 
-<div class="col">
-    <div class="form">
+    <div class="form d-flex justify-content-center">
         {{ form_start(form) }}
-            {{ form_row(form.firstName) }}
-            {{ form_row(form.lastName) }}
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.firstName) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.lastName) }}
+            </div>
+        </div>
+                {{ form_row(form.email) }}
+                {{ form_row(form.gender, {'attr': {'class': 'align-items-center'}}) }}
+                {{ form_row(form.isActive) }}
+                {{ form_row(form.address , {'attr': {'class': 'align-items-center'}})  }}
 
-            {{ form_row(form.email) }}
-            {{ form_row(form.gender) }}
-            {{ form_row(form.isActive) }}
-            {{ form_row(form.address) }}
-
-            {% for message in app.flashes('notice') %}
-                <div class="flash-notice">
-                    {{ message }}
+                {% for message in app.flashes('notice') %}
+                    <div class="flash-notice">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+{#                {{ form_widget(form.phones) }}#}
+                    <ul class="phones" style="list-style: none"
+                        data-index="{{ form.phones|length > 0 ? form.phones|last.vars.name + 1 : 0 }}"
+                        data-prototype="{{ form_widget(form.phones.vars.prototype)|e('html_attr') }}"
+                    >
+                        {% for phone in form.phones %}
+                            <li>
+                                {{ form_widget(phone.number) }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <button type="button" class="add_item_link" data-collection-holder-class="phones">Add a phone</button>
+                <div class="d-flex justify-content-center">
+                    {{ form_row(form.save) }}
                 </div>
-            {% endfor %}
-                <ul class="phones"
-                    data-index="{{ form.phones|length > 0 ? form.phones|last.vars.name + 1 : 0 }}"
-                    data-prototype="{{ form_widget(form.phones.vars.prototype)|e('html_attr') }}"
-                >
-                    {% for phone in form.phones %}
-                        <li>
-                            {{ form_row(phone.number) }}
-                        </li>
-                    {% endfor %}
-                </ul>
-                <button type="button" class="add_item_link" data-collection-holder-class="phones">Add a phone</button>
-
+        {{ form_end(form) }}
     </div>
-    {{ form_end(form) }}
-    <a href="{{ path('clients_list') }}">Back to List</a>
-</div>
-
 {% endblock %}
 

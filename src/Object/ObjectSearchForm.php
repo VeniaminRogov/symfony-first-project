@@ -3,8 +3,6 @@
 namespace App\Object;
 
 use App\Entity\City;
-use App\Entity\Client;
-use phpDocumentor\Reflection\Types\This;
 
 class ObjectSearchForm {
     private $name;
@@ -12,6 +10,7 @@ class ObjectSearchForm {
     private $gender;
     private $city;
     private $phone;
+    private int $page = 1;
 
     private $orderBy;
     private $sortField;
@@ -97,5 +96,15 @@ class ObjectSearchForm {
     public function setGender($gender): void
     {
         $this->gender = $gender;
+    }
+
+    public function getPage(): int{
+        return $this->page;
+    }
+
+
+    public function setPage($page): int
+    {
+        return $this->page = $page;
     }
 }

@@ -1,0 +1,47 @@
+{% extends 'bootstrap_5_horizontal_layout.html.twig' %}
+
+{% block _client_form_firstName_label %}
+    <label class="col-form-label required" for="client_form_firstName">First name</label>
+{% endblock %}
+
+{% block _client_form_lastName_label %}
+    <label class="col-form-label required" for="client_form_firstName">Last name</label>
+{% endblock %}
+
+{% block form_label_class -%}
+{%- endblock form_label_class %}
+
+{% block form_group_class -%}
+    col-sm
+{% endblock form_group_class %}
+
+{#{% block _client_form_email_row %}#}
+{#    <div class="mb-3 row">#}
+{#        <label class="col-form-label required" for="client_form_email">Email</label>#}
+{#        <div class="input-group col-sm">#}
+{#            <span class="input-group-text" id="basic-addon1">@</span>#}
+{#            <input type="email" id="client_form_email" name="client_form[email]" required="required" maxlength="255" pattern=".{2,}" class="form-control" aria-describedby="basic-addon1">#}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock _client_form_email_row %}#}
+
+{% block _client_form_email_widget %}
+    <div class="input-group col-sm">
+        <span class="input-group-text" id="basic-addon1">@</span>
+        {{- block('form_widget_simple') -}}
+    </div>
+{% endblock %}
+
+{% block _client_form_gender_row %}
+    <div class="mb-3 row align-items-center"><label class="col-form-label required" for="client_form_gender">Gender</label><div class="col-sm
+"><select id="client_form_gender" name="client_form[gender]" class="align-items-center form-select"><option value="1">male</option><option value="2">female</option><option value="3">hz</option></select>        </div></div>
+{% endblock %}
+
+{% block _client_form_address_city_row %}
+    <div class="mb-3 row align-items-center"><label class="col-form-label required" for="client_form_address_city">City</label><div class="col-sm
+"><select id="client_form_address_city" name="client_form[address][city]" class="form-select"><option value="1">city1</option><option value="2">city2</option><option value="3">city3</option><option value="4">zalinsk</option></select>        </div></div>
+{% endblock %}
+
+{% block _client_form_phones_row %}
+
+{% endblock %}

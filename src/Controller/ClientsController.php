@@ -5,8 +5,11 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Form\SearchForm;
 use App\Object\ObjectSearchForm;
+use App\Repository\ClientRepository;
 use App\Services\ClientModel;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +18,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ClientsController extends AbstractController
 {
-    public function index(Request $request,ManagerRegistry $doctrine): Response
+    public function index(Request $request,ManagerRegistry $doctrine, PaginatorInterface $paginator): Response
     {
         $searchObject = new ObjectSearchForm();
         $form = $this->createForm(SearchForm::class, $searchObject);
@@ -23,17 +26,25 @@ class ClientsController extends AbstractController
         $form->handleRequest($request);
 
 
+
         $clients = $doctrine->getRepository(Client::class)->sort($searchObject);
+
+//        dump($form);die;
+        $pagination = $paginator->paginate(
+          $clients,
+          $searchObject->getPage(),
+          10
+        );
 
 
         return $this->render('clients/index.html.twig', [
-            'clients_arr' => $clients,
-            'searchForm' => $form->createView()
+            'searchForm' => $form->createView(),
+            'pagination' => $pagination
         ]);
     }
 
 
-    public function createAndUpdate(Request $request, ManagerRegistry $doctrine, ?int $id = null, ClientModel $model): Response{
+    public function createAndUpdate(Request $request, ?int $id = null, ClientModel $model): Response{
         $id ? $bool = true : $bool = false;
 
         $form = $this->createForm(ClientForm::class, $model->checkClient($id));

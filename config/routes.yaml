@@ -7,15 +7,16 @@
 #  controller: App\Controller\HelloController::hello
 #  methods: GET|HEAD
 
+login:
+  path: /
+  controller: App\Controller\LoginController::index
+
+app_logout:
+  path: /logout
 
 clients_list:
-  path: /
+  path: /clients
   controller: App\Controller\ClientsController::index
-
-#clients_sort:
-#  path: /
-#  controller: App\Controller\ClientsController::sort
-
 
 clients_form_add:
   path: /clients/add

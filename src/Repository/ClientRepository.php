@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Client;
 use App\Object\ObjectSearchForm;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -79,10 +80,15 @@ class ClientRepository extends ServiceEntityRepository
                 ->orderBy($data->getSortField(), $data->getOrderBy());
         }
 
-//        dump($req);die;
-
         return $req->getQuery()->getResult();
     }
+
+//    public function getWithSearchQueryBuilder(?string $term): QueryBuilder
+//    {
+//        return $this->createQueryBuilder('c')
+//            ->orderBy('c.createdAt', 'DESC')
+//            ;
+//    }
 
 
 
