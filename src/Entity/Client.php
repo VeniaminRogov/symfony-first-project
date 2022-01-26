@@ -46,6 +46,9 @@ class Client
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Phone::class, cascade: ['persist'], orphanRemoval: true,)]
     private $phones;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'client')]
+    private $user;
+
     public function __construct()
     {
         $this->phones = new ArrayCollection();
@@ -178,6 +181,18 @@ class Client
                 $phone->setClient(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

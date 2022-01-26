@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Entity\User;
 use App\Form\SearchForm;
 use App\Object\ObjectSearchForm;
 use App\Repository\ClientRepository;
@@ -20,16 +21,18 @@ class ClientsController extends AbstractController
 {
     public function index(Request $request,ManagerRegistry $doctrine, PaginatorInterface $paginator): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $user = $this->getUser();
+//        dump($user);die;
+
         $searchObject = new ObjectSearchForm();
         $form = $this->createForm(SearchForm::class, $searchObject);
 
         $form->handleRequest($request);
 
-
-
         $clients = $doctrine->getRepository(Client::class)->sort($searchObject);
 
-//        dump($form);die;
         $pagination = $paginator->paginate(
           $clients,
           $searchObject->getPage(),
@@ -39,13 +42,21 @@ class ClientsController extends AbstractController
 
         return $this->render('clients/index.html.twig', [
             'searchForm' => $form->createView(),
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'user' => $user
         ]);
     }
 
 
     public function createAndUpdate(Request $request, ?int $id = null, ClientModel $model): Response{
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $user = $this->getUser();
+//        dump($user->getId());die;
+
         $id ? $bool = true : $bool = false;
+
+
 
         $form = $this->createForm(ClientForm::class, $model->checkClient($id));
 
@@ -66,6 +77,7 @@ class ClientsController extends AbstractController
     }
 
     public function delete(int $id, ClientModel $model) : Response{
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         if(!$model->deleteClient($id)){
             throw new NotFoundHttpException;
         }

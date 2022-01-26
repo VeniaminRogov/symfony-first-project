@@ -16,9 +16,15 @@ class HomeController extends AbstractController {
      * @throws NoResultException
      */
     public function countClient(ManagerRegistry $doctrine): Response{
+//        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+//        $user = $this->getUser();
+
+//        $userName = $user->getUsername();
+
         $count = $doctrine->getRepository(Client::class)->countClients();
         return $this->render('components/header.html.twig', [
-            'count' => $count
+            'count' => $count,
+//            'user' => $userName
         ]);
     }
 }

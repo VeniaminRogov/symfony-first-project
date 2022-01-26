@@ -3,21 +3,25 @@
 namespace App\Services;
 
 use App\Entity\Client;
+use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Security;
 
 class ClientModel{
 
     private $flash;
     private $doctrine;
     private $router;
+    private $user;
 
-    public function __construct(RequestStack $requestStack, ManagerRegistry $doctrine, RouterInterface $router)
+    public function __construct(RequestStack $requestStack, ManagerRegistry $doctrine, RouterInterface $router, Security $security)
     {
         $this->flash = $requestStack->getSession()->getFlashBag();
         $this->doctrine = $doctrine->getManager();
         $this->router = $router;
+        $this->user = $security->getUser();
     }
     
     public function checkClient(?int $id = null)
@@ -32,9 +36,10 @@ class ClientModel{
     {
         if(!$client->getCreatedAt()){
             $this->createClient($client);
-            $this->updatedClient($client);
+            $this->updateClient($client);
+
         }
-        $this->updatedClient($client);
+        $this->updateClient($client);
         $this->flashClient($bool);
 
         $this->doctrine->persist($client);
@@ -46,9 +51,10 @@ class ClientModel{
 
     public function createClient(Client $client){
         $client->setCreatedAt(new \DateTime());
+        $client->setUser($this->user);
     }
 
-    public function updatedClient(Client $client){
+    public function updateClient(Client $client){
         $client->setUpdatedAt(new \DateTime());
     }
 
