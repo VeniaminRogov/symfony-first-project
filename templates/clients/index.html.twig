@@ -1,12 +1,10 @@
 {% extends 'base.html.twig' %}
 {% form_theme searchForm with './form/searchFormTheme.html.twig' %}
-
 {% block title %}Clients{% endblock %}
 {% block pageTitle %}All clients{% endblock %}
 
 {% block content %}
-
-        <div class="mb-5 d-flex justify-content-center searchForm">
+    <div class="mb-5 d-flex justify-content-center searchForm">
             {{ form_start(searchForm) }}
                 <div class="row">
                     <div class="col">
@@ -42,9 +40,7 @@
 
         <div class="d-flex justify-content-center">
 
-            {% if is_granted('ROLE_USER') %}
                 <a class="btn btn-primary" href="{{ path('clients_form_add') }}">Add Client</a>
-            {% endif %}
 
         </div>
         {% if pagination %}
@@ -94,10 +90,10 @@
                     <th scope="row">{{ client.updatedAt|date("Y-m-d H:i") }}</th>
 
                     <th scope="row">
-                        {% if is_granted('ROLE_ADMIN') %}
+                        {% if is_granted('delete', client) %}
                             <a class="btn btn-danger" href="{{ path('clients_form_delete', {id: client.id}) }}">Delete</a>
                         {% endif %}
-                        {% if client.user.id == user.id %}
+                        {% if client.user.id == user.id or is_granted('edit', client) %}
                             <a class="btn btn-primary" href="{{ path('clients_form_edit', {id: client.id}) }}">Edit</a>
                         {% endif %}
                         </th>

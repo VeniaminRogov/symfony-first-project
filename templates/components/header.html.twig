@@ -1,4 +1,3 @@
-{#{{ dump(is_granted('ROLE_ADMIN')) }}#}
 {% if app.user == null %}
 <header class="container-fluid col header">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -13,7 +12,7 @@
     </nav>
 </header>
 {% else %}
-<header class="container-fluid col header">
+    <header class="container-fluid col header">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <span class="navbar-brand" href="#">Navbar</span>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -24,6 +23,16 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{{ path('clients_form_add') }}">Add client</a>
                 </li>
+                <li class="nav-item">
+                    {% if app.session.has('lastId') %}
+                        <a class="nav-link active"
+                           href="{{ path('clients_form_edit', {id: app.session.get('lastId')}) }}"
+                        >Last Client</a>
+                    {% endif %}
+                </li>
+
+
+
                 <li class="nav-item d-flex align-items-center">
 {#                    {{ user }}#}
 {#                </li>#}

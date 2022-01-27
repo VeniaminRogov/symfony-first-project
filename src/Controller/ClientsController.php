@@ -21,10 +21,7 @@ class ClientsController extends AbstractController
 {
     public function index(Request $request,ManagerRegistry $doctrine, PaginatorInterface $paginator): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-
         $user = $this->getUser();
-//        dump($user);die;
 
         $searchObject = new ObjectSearchForm();
         $form = $this->createForm(SearchForm::class, $searchObject);
@@ -49,18 +46,21 @@ class ClientsController extends AbstractController
 
 
     public function createAndUpdate(Request $request, ?int $id = null, ClientModel $model): Response{
-        $this->denyAccessUnlessGranted('ROLE_USER');
-
-        $user = $this->getUser();
-//        dump($user->getId());die;
-
         $id ? $bool = true : $bool = false;
 
+        $client = $model->checkClient($id);
 
-
-        $form = $this->createForm(ClientForm::class, $model->checkClient($id));
+        $form = $this->createForm(ClientForm::class, $client);
 
         $form->handleRequest($request);
+
+        if($client){
+            if(!$this->isGranted('edit', $client)){
+//                if(!$model->isUserClient($client)){
+//                }
+                return $this->redirectToRoute('clients_list');
+            }
+        }
 
         if($form->isSubmitted() && $form->isValid()){
             $client = $form->getData();
@@ -76,17 +76,21 @@ class ClientsController extends AbstractController
         ]);
     }
 
+    public function lastEdit(Request $request){
+        $lastId = $request->getSession()->get('lastId');
+
+    }
+
     public function delete(int $id, ClientModel $model) : Response{
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        if(!$model->deleteClient($id)){
-            throw new NotFoundHttpException;
+        $client = $model->checkClient($id);
+        if($this->isGranted('delete', $client)){
+            $model->deleteClient($client);
+
+            $this->addFlash(
+                'danger',
+                'Delete client ---'.$id
+            );
         }
-
-        $this->addFlash(
-            'danger',
-            'Delete client ---'.$id
-        );
-
         return $this->redirectToRoute('clients_list');
     }
 }

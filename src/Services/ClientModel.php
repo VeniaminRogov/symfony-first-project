@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Entity\Client;
 use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
@@ -15,9 +16,11 @@ class ClientModel{
     private $doctrine;
     private $router;
     private $user;
+    private $session;
 
     public function __construct(RequestStack $requestStack, ManagerRegistry $doctrine, RouterInterface $router, Security $security)
     {
+        $this->session = $requestStack->getSession();
         $this->flash = $requestStack->getSession()->getFlashBag();
         $this->doctrine = $doctrine->getManager();
         $this->router = $router;
@@ -32,19 +35,30 @@ class ClientModel{
         return $this->doctrine->getRepository(Client::class)->find($id);
     }
 
+    public function isUserClient(Client $client)
+    {
+        if($this->user === $client->getUser()){
+            return true;
+        }
+        return false;
+    }
+
     public function createAndUpdateClient(Client $client, $bool): Client
     {
         if(!$client->getCreatedAt()){
             $this->createClient($client);
-            $this->updateClient($client);
-
         }
         $this->updateClient($client);
         $this->flashClient($bool);
 
+
+//        dump($this->session->get('lastId'));die;
+
         $this->doctrine->persist($client);
 
         $this->doctrine->flush();
+
+        $this->session->set('lastId',$client->getId());
 
         return $client;
     }
@@ -58,10 +72,8 @@ class ClientModel{
         $client->setUpdatedAt(new \DateTime());
     }
 
-    public function deleteClient(int $id): bool
+    public function deleteClient(Client $client): bool
     {
-        $client = $this->checkClient($id);
-
         $entityManager = $this->doctrine;
         $entityManager->remove($client);
 
