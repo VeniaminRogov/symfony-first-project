@@ -12,10 +12,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Form\ClientForm;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ClientsController extends AbstractController
 {
@@ -56,8 +59,6 @@ class ClientsController extends AbstractController
 
         if($client){
             if(!$this->isGranted('edit', $client)){
-//                if(!$model->isUserClient($client)){
-//                }
                 return $this->redirectToRoute('clients_list');
             }
         }
@@ -65,7 +66,10 @@ class ClientsController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $client = $form->getData();
 
-            $model->createAndUpdateClient($client, $bool);
+            /** @var UploadedFile $avatar */
+            $avatar = $form->get('avatar')->getData();
+
+            $model->createAndUpdateClient($client, $bool, $avatar);
 
             return $this->redirectToRoute('clients_form_edit', ['id' => $client->getId()]);
         }

@@ -6,9 +6,12 @@ use App\Entity\Client;
 use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use JetBrains\PhpStorm\Pure;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ClientModel{
 
@@ -17,14 +20,25 @@ class ClientModel{
     private $router;
     private $user;
     private $session;
+    private $slugger;
+    private $targetDirectory;
 
-    public function __construct(RequestStack $requestStack, ManagerRegistry $doctrine, RouterInterface $router, Security $security)
+    public function __construct(
+        RequestStack $requestStack,
+        ManagerRegistry $doctrine,
+        RouterInterface $router,
+        Security $security,
+        $targetDirectory,
+        SluggerInterface $slugger,
+    )
     {
         $this->session = $requestStack->getSession();
         $this->flash = $requestStack->getSession()->getFlashBag();
         $this->doctrine = $doctrine->getManager();
         $this->router = $router;
         $this->user = $security->getUser();
+        $this->slugger = $slugger;
+        $this->targetDirectory = $targetDirectory;
     }
     
     public function checkClient(?int $id = null)
@@ -43,16 +57,22 @@ class ClientModel{
         return false;
     }
 
-    public function createAndUpdateClient(Client $client, $bool): Client
+    public function createAndUpdateClient(Client $client, $bool,$avatar): Client
     {
         if(!$client->getCreatedAt()){
             $this->createClient($client);
         }
         $this->updateClient($client);
+
+//        $avatar = $client->getImg();
+
+
+        $client->setImg($this->uploadAvatar($client, $avatar));
+
+//        dump($client);die;
+
+
         $this->flashClient($bool);
-
-
-//        dump($this->session->get('lastId'));die;
 
         $this->doctrine->persist($client);
 
@@ -70,6 +90,35 @@ class ClientModel{
 
     public function updateClient(Client $client){
         $client->setUpdatedAt(new \DateTime());
+    }
+
+    public function getTargetDirectory(){
+        return $this->targetDirectory;
+    }
+
+    public function uploadAvatar(Client $client, ?UploadedFile $avatar = null){
+
+        if($avatar == null){
+            return $client->getImg();
+        }
+
+        try {
+            unlink($this->getTargetDirectory().''.$client->getImg());
+
+        } catch (\Exception $exception){}
+
+
+        $originalFileName = pathinfo($avatar->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeFileName = $this->slugger->slug($originalFileName);
+        $fileName = $safeFileName.'-'.uniqid().'.'.$avatar->guessExtension();
+
+        try {
+            $avatar->move($this->getTargetDirectory(), $fileName);
+        } catch (FileException $e){
+
+        }
+
+        return $fileName;
     }
 
     public function deleteClient(Client $client): bool

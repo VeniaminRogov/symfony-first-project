@@ -7,6 +7,9 @@
 #  controller: App\Controller\HelloController::hello
 #  methods: GET|HEAD
 
+_liip_imagine:
+  resource: "@LiipImagineBundle/Resources/config/routing.yaml"
+
 register:
   path: /register
   controller: App\Controller\RegistrationController::index

@@ -6,7 +6,7 @@
 
 
 {% block content %}
-
+{#{{ dump(form.avatar.parent.vars.value.img) }}#}
     <div class="form d-flex justify-content-center">
         {{ form_start(form) }}
         <div class="row">
@@ -19,6 +19,11 @@
         </div>
                 {{ form_row(form.email) }}
                 {{ form_row(form.gender, {'attr': {'class': 'align-items-center'}}) }}
+        <div>
+            {{ form_label(form.avatar) }}
+            <img style="display: block; margin-bottom: 10px" src="{{ (avatars_url~form.avatar.parent.vars.value.img) | imagine_filter('edit_thumb')}}" alt="">
+            {{ form_widget(form.avatar) }}
+        </div>
                 {{ form_row(form.isActive) }}
                 {{ form_row(form.address , {'attr': {'class': 'align-items-center'}})  }}
 

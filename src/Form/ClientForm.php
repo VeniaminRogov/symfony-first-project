@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
@@ -37,6 +38,10 @@ class ClientForm extends AbstractType {
                 'allow_add' => true,
                 "allow_delete" => true,
                 'by_reference' => false
+            ])
+            ->add('avatar', FileType::class, [
+                'mapped' => false,
+                'required' => false
             ])
             ->add('save',SubmitType::class);
     }

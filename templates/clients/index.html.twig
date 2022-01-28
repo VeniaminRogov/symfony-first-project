@@ -48,6 +48,7 @@
                 <thead>
                 <th scope="col">#</th>
                 <th scope="col">First Name</th>
+                <th scope="col">Avatar</th>
                 <th scope="col">Last Name</th>
                 <th scope="col">Email</th>
                 <th scope="col">Gender</th>
@@ -67,8 +68,12 @@
 
                 <tbody>
                 {% for client in pagination %}
+{#                {{ dump(asset('uploads/avatars/', client.img)) }}#}
                 <tr>
                     <th scope="row">{{ client.id }}</th>
+                    <th scope="row">
+                        <img src="{{ (avatars_url ~ client.img) | imagine_filter('list_thumb') }}" alt="No found avatar">
+                    </th>
                     <th scope="row">{{ client.firstName }}</th>
                     <th scope="row">{{ client.lastName }}</th>
                     <th scope="row">{{ mail(client.email) }}</th>

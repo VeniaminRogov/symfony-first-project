@@ -49,6 +49,9 @@ class Client
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'client')]
     private $user;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $img;
+
     public function __construct()
     {
         $this->phones = new ArrayCollection();
@@ -193,6 +196,18 @@ class Client
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getImg(): ?string
+    {
+        return $this->img;
+    }
+
+    public function setImg(string $img): self
+    {
+        $this->img = $img;
 
         return $this;
     }

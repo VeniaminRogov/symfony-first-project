@@ -1,0 +1,24 @@
+liip_imagine:
+
+  # configure resolvers
+  resolvers:
+
+    # setup the default resolver
+    default:
+
+      # use the default web path
+      web_path: ~
+
+  # your filter sets are defined here
+  filter_sets:
+
+    # use the default cache configuration
+    cache: ~
+
+    list_thumb:
+      filters:
+        thumbnail: { size: [50,50]}
+
+    edit_thumb:
+      filters:
+        thumbnail: { size: [ 200,200 ] }
