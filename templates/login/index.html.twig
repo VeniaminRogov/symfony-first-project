@@ -25,9 +25,10 @@
 
                     <input type="hidden" name="_target_path" value="{{ path('clients_list') }}"/>
 
-                    <div class="d-flex justify-content-center mt-2">
+                    <div class="d-flex justify-content-evenly align-items-center mt-2">
                         <button class="btn btn-primary" type="submit">login</button>
-                        <a href="{{ path('register') }}" class="btn btn-primaty">Registration</a>
+                        <a href="{{ path('register') }}" class="btn btn-info">Registration</a>
+                        <a href="{{ path('app_forgot_password_request') }}" class="btn btn-warning">Forgot password</a>
                     </div>
                 </form>
             </div>

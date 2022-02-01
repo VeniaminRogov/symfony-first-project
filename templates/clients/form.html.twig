@@ -4,9 +4,7 @@
 {% block title %}Create client{% endblock %}
 {% block pageTitle %}{{ title }}{% endblock %}
 
-
 {% block content %}
-{#{{ dump(form.avatar.parent.vars.value.img) }}#}
     <div class="form d-flex justify-content-center">
         {{ form_start(form) }}
         <div class="row">
@@ -21,8 +19,13 @@
                 {{ form_row(form.gender, {'attr': {'class': 'align-items-center'}}) }}
         <div>
             {{ form_label(form.avatar) }}
+            {% if form.avatar.parent.vars.value == null %}
+
+            {{ form_widget(form.avatar) }}
+            {% else %}
             <img style="display: block; margin-bottom: 10px" src="{{ (avatars_url~form.avatar.parent.vars.value.img) | imagine_filter('edit_thumb')}}" alt="">
             {{ form_widget(form.avatar) }}
+            {% endif %}
         </div>
                 {{ form_row(form.isActive) }}
                 {{ form_row(form.address , {'attr': {'class': 'align-items-center'}})  }}

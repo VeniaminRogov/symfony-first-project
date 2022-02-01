@@ -22,6 +22,7 @@ class ClientModel{
     private $session;
     private $slugger;
     private $targetDirectory;
+    private $mailer;
 
     public function __construct(
         RequestStack $requestStack,
@@ -30,6 +31,7 @@ class ClientModel{
         Security $security,
         $targetDirectory,
         SluggerInterface $slugger,
+        MailModel $email
     )
     {
         $this->session = $requestStack->getSession();
@@ -39,6 +41,7 @@ class ClientModel{
         $this->user = $security->getUser();
         $this->slugger = $slugger;
         $this->targetDirectory = $targetDirectory;
+        $this->mailer = $email;
     }
     
     public function checkClient(?int $id = null)
@@ -64,13 +67,7 @@ class ClientModel{
         }
         $this->updateClient($client);
 
-//        $avatar = $client->getImg();
-
-
         $client->setImg($this->uploadAvatar($client, $avatar));
-
-//        dump($client);die;
-
 
         $this->flashClient($bool);
 
@@ -79,6 +76,8 @@ class ClientModel{
         $this->doctrine->flush();
 
         $this->session->set('lastId',$client->getId());
+
+        $this->mailer->sendEmail($client);
 
         return $client;
     }

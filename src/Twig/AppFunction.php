@@ -9,7 +9,7 @@ class AppFunction extends AbstractExtension{
     public function getFunctions()
     {
         return [
-            new TwigFunction('mail', [$this, 'passEmail']),
+            new TwigFunction('email', [$this, 'passEmail']),
         ];
     }
 

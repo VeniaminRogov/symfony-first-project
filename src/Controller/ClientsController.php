@@ -8,6 +8,7 @@ use App\Form\SearchForm;
 use App\Object\ObjectSearchForm;
 use App\Repository\ClientRepository;
 use App\Services\ClientModel;
+use App\Services\MailModel;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
@@ -47,7 +48,6 @@ class ClientsController extends AbstractController
         ]);
     }
 
-
     public function createAndUpdate(Request $request, ?int $id = null, ClientModel $model): Response{
         $id ? $bool = true : $bool = false;
 
@@ -69,7 +69,7 @@ class ClientsController extends AbstractController
             /** @var UploadedFile $avatar */
             $avatar = $form->get('avatar')->getData();
 
-            $model->createAndUpdateClient($client, $bool, $avatar);
+            $client = $model->createAndUpdateClient($client, $bool, $avatar);
 
             return $this->redirectToRoute('clients_form_edit', ['id' => $client->getId()]);
         }

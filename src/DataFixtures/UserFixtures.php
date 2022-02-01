@@ -18,10 +18,12 @@ class UserFixtures extends Fixture{
     public function load(ObjectManager $manager)
     {
         $user = new User();
-        $user->setEmail('admin@mail.ru');
-        $user->setRoles(['ROLE_ADMIN']);
-        $password = $this->hasher->hashPassword($user, 'admin');
+        $user->setEmail('banned@email.ru');
+        $user->setRoles(['ROLE_USER']);
+        $password = $this->hasher->hashPassword($user, 'banned');
         $user->setPassword($password);
+        $user->setIsVerified(true);
+        $user->setIsBanned(true);
 
         $manager->persist($user);
         $manager->flush();

@@ -10,6 +10,10 @@
 _liip_imagine:
   resource: "@LiipImagineBundle/Resources/config/routing.yaml"
 
+email:
+  path: /email
+  controller: App\Controller\MailController::sendEmail
+
 register:
   path: /register
   controller: App\Controller\RegistrationController::index
@@ -17,6 +21,10 @@ register:
 login:
   path: /
   controller: App\Controller\LoginController::index
+
+verify_email:
+  path: /verify
+  controller: App\Controller\RegistrationController::verifyUserEmail
 
 app_logout:
   path: /logout
