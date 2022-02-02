@@ -2,7 +2,10 @@
 {% form_theme searchForm with './form/searchFormTheme.html.twig' %}
 {% block title %}Clients{% endblock %}
 {% block pageTitle %}All clients{% endblock %}
-
+{% block javascript %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('client_phone')  }}
+{% endblock %}
 {% block content %}
     <div class="mb-5 d-flex justify-content-center searchForm">
             {{ form_start(searchForm) }}

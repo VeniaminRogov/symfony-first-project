@@ -6,6 +6,7 @@ use App\Entity\Client;
 use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use JetBrains\PhpStorm\Pure;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -31,7 +32,7 @@ class ClientModel{
         Security $security,
         $targetDirectory,
         SluggerInterface $slugger,
-        MailModel $email
+        MailService $email
     )
     {
         $this->session = $requestStack->getSession();
@@ -52,7 +53,7 @@ class ClientModel{
         return $this->doctrine->getRepository(Client::class)->find($id);
     }
 
-    public function isUserClient(Client $client)
+    public function isUserClient(Client $client): bool
     {
         if($this->user === $client->getUser()){
             return true;
@@ -67,6 +68,7 @@ class ClientModel{
         }
         $this->updateClient($client);
 
+
         $client->setImg($this->uploadAvatar($client, $avatar));
 
         $this->flashClient($bool);
@@ -76,8 +78,6 @@ class ClientModel{
         $this->doctrine->flush();
 
         $this->session->set('lastId',$client->getId());
-
-        $this->mailer->sendEmail($client);
 
         return $client;
     }

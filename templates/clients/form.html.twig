@@ -4,6 +4,11 @@
 {% block title %}Create client{% endblock %}
 {% block pageTitle %}{{ title }}{% endblock %}
 
+{% block javascript %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('client_phone')  }}
+{% endblock %}
+
 {% block content %}
     <div class="form d-flex justify-content-center">
         {{ form_start(form) }}

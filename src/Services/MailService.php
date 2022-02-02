@@ -10,7 +10,7 @@ use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 
-class MailModel
+class MailService
 {
 
     private $mailer;
@@ -57,15 +57,20 @@ class MailModel
         }
     }
 
-    public function sendEmailToResetPassword(User $user, $resetToken){
+    public function sendEmailToResetPassword(string $to, $resetToken){
         $email = (new TemplatedEmail())
             ->from(new Address('veniamin.r@zimalab.com', 'ResetPasswordBot'))
-            ->to($user->getEmail())
+            ->to($to)
             ->subject('Your password reset request')
             ->htmlTemplate('reset_password/email.html.twig')
             ->context([
                 'resetToken' => $resetToken,
             ])
         ;
+        try {
+            $this->mailer->send($email);
+        } catch (TransportExceptionInterface $e) {
+            dump($e->getDebug());
+        }
     }
 }

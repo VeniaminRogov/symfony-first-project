@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\ChangePasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
-use App\Services\MailModel;
+use App\Services\MailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -38,7 +38,7 @@ class ResetPasswordController extends AbstractController
      * Display & process form to request a password reset.
      */
     #[Route('', name: 'app_forgot_password_request')]
-    public function request(Request $request, MailModel $mailer): Response
+    public function request(Request $request, MailService $mailer): Response
     {
         $form = $this->createForm(ResetPasswordRequestFormType::class);
         $form->handleRequest($request);
@@ -130,7 +130,7 @@ class ResetPasswordController extends AbstractController
         ]);
     }
 
-    private function processSendingPasswordResetEmail(string $emailFormData, MailModel $mailer): RedirectResponse
+    private function processSendingPasswordResetEmail(string $emailFormData, MailService $mailer): RedirectResponse
     {
         $user = $this->entityManager->getRepository(User::class)->findOneBy([
             'email' => $emailFormData,
@@ -144,14 +144,14 @@ class ResetPasswordController extends AbstractController
         try {
             $resetToken = $this->resetPasswordHelper->generateResetToken($user);
         } catch (ResetPasswordExceptionInterface $e) {
-            // If you want to tell the user why a reset email was not sent, uncomment
-            // the lines below and change the redirect to 'app_forgot_password_request'.
-            // Caution: This may reveal if a user is registered or not.
-            //
-            // $this->addFlash('reset_password_error', sprintf(
-            //     'There was a problem handling your password reset request - %s',
-            //     $e->getReason()
-            // ));
+//             If you want to tell the user why a reset email was not sent, uncomment
+//             the lines below and change the redirect to 'app_forgot_password_request'.
+//             Caution: This may reveal if a user is registered or not.
+
+             $this->addFlash('reset_password_error', sprintf(
+                 'There was a problem handling your password reset request - %s',
+                 $e->getReason()
+             ));
 
             return $this->redirectToRoute('app_check_email');
         }
@@ -166,9 +166,9 @@ class ResetPasswordController extends AbstractController
 //            ])
 //        ;
 
+        $mailer->sendEmailToResetPassword($user->getEmail(), $resetToken);
+//        die;
 //        $mailer->send($email);
-
-        $mailer->sendEmailToResetPassword($user, $resetToken);
 
         // Store the token object in session for retrieval in check-email route.
         $this->setTokenObjectInSession($resetToken);

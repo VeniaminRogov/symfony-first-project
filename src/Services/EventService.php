@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Services;
+
+use App\Entity\Client;
+use Symfony\Contracts\EventDispatcher\Event;
+
+class EventService extends Event{
+    public const NAME = 'client.added';
+
+    protected Client $client;
+
+    public function __construct(Client $client)
+    {
+        $this->client = $client;
+    }
+
+    public function getClient(): Client
+    {
+        return $this->client;
+    }
+}
