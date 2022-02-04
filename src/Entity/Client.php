@@ -52,6 +52,9 @@ class Client
     #[ORM\Column(type: 'string', length: 255)]
     private $img;
 
+    #[ORM\Column(type: 'array')]
+    private $tags = [];
+
     public function __construct()
     {
         $this->phones = new ArrayCollection();
@@ -208,6 +211,18 @@ class Client
     public function setImg(string $img): self
     {
         $this->img = $img;
+
+        return $this;
+    }
+
+    public function getTags(): ?array
+    {
+        return $this->tags;
+    }
+
+    public function setTags(array $tags): self
+    {
+        $this->tags = $tags;
 
         return $this;
     }

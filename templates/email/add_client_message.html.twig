@@ -5,8 +5,8 @@
    First Name: {{ client.firstName }} <br>
    Last Name: {{ client.lastName }} <br>
    Email: {{ client.email }} <br>
-   <img src="{{ (avatars_url ~ client.img) | imagine_filter('list_thumb')}}" alt="no avatar">
-   <a href="{{ app.request.getSchemeAndHttpHost() ~ path('clients_form_edit', {id: client.id}) }}">Watch client</a>
+{#   <img src="{{ (avatars_url ~ client.img) | imagine_filter('list_thumb')}}" alt="no avatar">#}
+{#   <a href="{{ app.request.getSchemeAndHttpHost() ~ path('clients_form_edit', {id: client.id}) }}">Watch client</a>#}
 </p>
 
 <p>

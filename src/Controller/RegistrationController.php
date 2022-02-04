@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Mail\MailNotification;
 use App\Repository\UserRepository;
 use App\Services\MailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
@@ -18,7 +20,15 @@ use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 class RegistrationController extends AbstractController
 {
 //    #[Route('/register', name: 'app_register')]
-    public function index(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, VerifyEmailHelperInterface $verifyEmailHelper, MailService $mailer): Response
+    public function index(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        EntityManagerInterface $entityManager,
+        VerifyEmailHelperInterface $verifyEmailHelper,
+        MailService $mailer,
+        MessageBusInterface $bus
+
+    ): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -44,9 +54,10 @@ class RegistrationController extends AbstractController
                 ['id' => $user->getId()]
             );
 
-            $mailer->sendEmailToVerify($user, $user->getEmail(), $signatureComponents->getSignedUrl());
+//            $mailer->sendEmailToVerify($user, $user->getEmail(), $signatureComponents-
+            $bus->dispatch(new MailNotification($user->getId(),MailNotification::USER_REGISTRATION, $signatureComponents->getSignedUrl()));
 
-            return $this->redirectToRoute('clients_list');
+            return $this->redirectToRoute('register');
         }
 
         return $this->render('registration/register.html.twig', [

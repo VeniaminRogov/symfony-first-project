@@ -6,7 +6,8 @@ use App\Entity\Client;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class EventService extends Event{
-    public const NAME = 'client.added';
+    public const CLIENT_ADDED = 'client.added';
+    public const CLIENT_UPDATED = 'client.updated';
 
     protected Client $client;
 
@@ -15,7 +16,7 @@ class EventService extends Event{
         $this->client = $client;
     }
 
-    public function getClient(): Client
+    public function getClient()
     {
         return $this->client;
     }

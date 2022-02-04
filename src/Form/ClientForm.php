@@ -3,18 +3,26 @@ namespace App\Form;
 
 use App\Entity\Address;
 use App\Entity\Client;
+use App\Form\DataTransformer\TagsTransformer;
 use phpDocumentor\Reflection\Types\Collection;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ClientForm extends AbstractType {
+
+    public function __construct(private TagsTransformer $transformer)
+    {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options){
         $builder
             ->add('firstName')
@@ -43,7 +51,13 @@ class ClientForm extends AbstractType {
                 'mapped' => false,
                 'required' => false
             ])
+            ->add('tags', TextType::class, [
+                'required' => false,
+            ])
             ->add('save',SubmitType::class);
+
+        $builder->get('tags')
+            ->addModelTransformer($this->transformer);
     }
 
 

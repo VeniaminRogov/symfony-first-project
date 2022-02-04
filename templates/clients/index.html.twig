@@ -61,6 +61,7 @@
                 <th scope="col">Street 2</th>
                 <th scope="col">Zip</th>
                 <th scope="col">City</th>
+                <th scope="col">Tags</th>
                 <th scope="col">Created by whom</th>
                 <th scope="col">Created at</th>
                 <th scope="col">Updated at</th>
@@ -71,7 +72,6 @@
 
                 <tbody>
                 {% for client in pagination %}
-{#                {{ dump(asset('uploads/avatars/', client.img)) }}#}
                 <tr>
                     <th scope="row">{{ client.id }}</th>
                     <th scope="row">
@@ -93,6 +93,11 @@
                     <th scope="row">{{ client.address.str2 }}</th>
                     <th scope="row">{{ client.address.zip }}</th>
                     <th scope="row">{{ client.address.city.name|capitalize  }}</th>
+                    <th scope="row">
+                        {% for tag in client.tags %}
+                            {{ tag~', ' }}
+                        {% endfor %}
+                    </th>
                     <th scope="row">{{ client.user.email  }}</th>
                     <th scope="row">{{ client.createdAt|date("Y-m-d H:i") }}</th>
                     <th scope="row">{{ client.updatedAt|date("Y-m-d H:i") }}</th>

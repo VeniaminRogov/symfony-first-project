@@ -32,6 +32,9 @@
             {{ form_widget(form.avatar) }}
             {% endif %}
         </div>
+        <div>
+            {{ form_row(form.tags) }}
+        </div>
                 {{ form_row(form.isActive) }}
                 {{ form_row(form.address , {'attr': {'class': 'align-items-center'}})  }}
 

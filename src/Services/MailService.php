@@ -37,7 +37,10 @@ class MailService
         } catch (TransportExceptionInterface $e) {
             dump($e->getDebug());
         }
-//        dump($email);die;
+    }
+
+    public function sendEmailAccrosMessanger($email){
+        $this->mailer->send($email);
     }
 
     public function sendEmailToVerify(User $user, string $to, $signedUrl){

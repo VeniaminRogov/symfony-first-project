@@ -1,5 +1,6 @@
 App\Entity\Client:
   constraints:
+    - App\Validator\ClientConstraint: ~
     - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: email
   properties:
     firstName:

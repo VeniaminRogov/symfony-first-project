@@ -4,12 +4,16 @@ namespace App\Services;
 
 use App\Entity\Client;
 use App\Entity\User;
+use App\Mail\MailNotification;
+use App\Subscribers\ClientSubscriber;
 use Doctrine\Persistence\ManagerRegistry;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -32,11 +36,12 @@ class ClientModel{
         Security $security,
         $targetDirectory,
         SluggerInterface $slugger,
-        MailService $email
+        MailService $email,
+        private EventDispatcherInterface $dispatcher,
+        private MessageBusInterface $bus
     )
     {
         $this->session = $requestStack->getSession();
-        $this->flash = $requestStack->getSession()->getFlashBag();
         $this->doctrine = $doctrine->getManager();
         $this->router = $router;
         $this->user = $security->getUser();
@@ -68,14 +73,21 @@ class ClientModel{
         }
         $this->updateClient($client);
 
+        $event = new EventService($client);
 
         $client->setImg($this->uploadAvatar($client, $avatar));
-
-        $this->flashClient($bool);
 
         $this->doctrine->persist($client);
 
         $this->doctrine->flush();
+
+        if ($bool){
+            $this->dispatcher->dispatch($event, EventService::CLIENT_UPDATED);
+        } else{
+            $this->dispatcher->dispatch($event, EventService::CLIENT_ADDED);
+            $this->bus->dispatch(new MailNotification($client->getId(), MailNotification::CLIENT_ADDED));
+        }
+
 
         $this->session->set('lastId',$client->getId());
 
@@ -130,11 +142,11 @@ class ClientModel{
         return true;
     }
 
-    private function flashClient($bool){
-        $this->flash->add(
-            'primary',
-            $bool ? 'Your changes were saved!' :
-                'Your client is added!'
-        );
-    }
+//    public function flashClient($bool){
+//        $this->flash->add(
+//            'primary',
+//            $bool ? 'Your changes were saved!' :
+//                'Your client is added!'
+//        );
+//    }
 }
